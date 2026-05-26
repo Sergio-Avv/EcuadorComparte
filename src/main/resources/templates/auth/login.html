@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles"></th:block>
+</head>
+<body>
+
+<th:block th:fragment="content">
+    <div style="min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+        <div style="width: 100%; max-width: 420px;">
+            <div class="card">
+                <div class="card-body" style="padding: 2.5rem;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="width: 56px; height: 56px; background: var(--azul); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="bi bi-shield-lock" style="color: var(--amarillo); font-size: 1.5rem;"></i>
+                        </div>
+                        <h1 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">
+                            Acceso Administrativo
+                        </h1>
+                        <p style="color: var(--text-secondary); font-size: 0.88rem;">
+                            Ecuador Comparte
+                        </p>
+                    </div>
+
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        <i class="bi bi-exclamation-circle"></i>
+                        Usuario o contraseña incorrectos.
+                    </div>
+
+                    <div th:if="${param.logout}" class="alert alert-success">
+                        <i class="bi bi-check-circle"></i>
+                        Sesión cerrada correctamente.
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="form-group">
+                            <label class="form-label" for="username">
+                                <i class="bi bi-person"></i> Usuario
+                            </label>
+                            <input type="text" id="username" name="username"
+                                   class="form-control" placeholder="admin" autofocus/>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="password">
+                                <i class="bi bi-lock"></i> Contraseña
+                            </label>
+                            <input type="password" id="password" name="password"
+                                   class="form-control" placeholder="••••••••"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary"
+                                style="width: 100%; margin-top: 0.5rem; justify-content: center;">
+                            <i class="bi bi-box-arrow-in-right"></i> Ingresar
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                <a th:href="@{/}" style="color: var(--azul-claro);">
+                    <i class="bi bi-arrow-left"></i> Volver al inicio
+                </a>
+            </p>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

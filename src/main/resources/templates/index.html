@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/index-page.css}"/>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <section class="hero">
+        <canvas id="hero-canvas" aria-hidden="true"></canvas>
+        <div class="hero-inner">
+            <div class="hero-content">
+                <div class="hero-tag">
+                    <i class="bi bi-geo-alt-fill"></i> Ecuador
+                </div>
+                <h1 class="hero-title">
+                    Impulsamos tu <span>futuro</span> en Ecuador
+                </h1>
+                <p class="hero-desc">
+                    Acompañamos a personas, familias y empresas en su camino hacia el progreso.
+                    Servicios, programas y conferencias diseñados para transformar vidas.
+                </p>
+                <div class="hero-actions">
+                    <a th:href="@{/contacto}" class="btn btn-gold">
+                        <i class="bi bi-send-fill"></i> Contáctanos
+                    </a>
+                    <a th:href="@{/sobre-nosotros}" class="btn"
+                       style="background: rgba(255,255,255,0.12); color: var(--blanco); border-color: rgba(255,255,255,0.25);">
+                        <i class="bi bi-info-circle"></i> Sobre nosotros
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <div class="hero-card-stat">
+                        <div class="hero-stat-icon"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <div class="hero-stat-num">+5,000</div>
+                            <div class="hero-stat-label">Personas beneficiadas</div>
+                        </div>
+                    </div>
+                    <div class="hero-card-stat">
+                        <div class="hero-stat-icon"><i class="bi bi-award-fill"></i></div>
+                        <div>
+                            <div class="hero-stat-num">+120</div>
+                            <div class="hero-stat-label">Programas realizados</div>
+                        </div>
+                    </div>
+                    <div class="hero-card-stat">
+                        <div class="hero-stat-icon"><i class="bi bi-building"></i></div>
+                        <div>
+                            <div class="hero-stat-num">+80</div>
+                            <div class="hero-stat-label">Empresas aliadas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="mission-grid">
+                <div class="mission-text animate-left">
+                    <p class="hero-tag"
+                       style="display: inline-flex; background: rgba(13,27,75,0.08); border-color: rgba(13,27,75,0.15); color: var(--azul-claro); margin-bottom: 1rem;">
+                        <i class="bi bi-bullseye"></i> Nuestra misión
+                    </p>
+                    <h2>Transformamos vidas a través del conocimiento</h2>
+                    <p>Somos una fundación comprometida con el desarrollo humano y empresarial en Ecuador. Creemos en el poder de la educación y el acompañamiento para generar cambios reales.</p>
+                    <p>Trabajamos con personas, familias y organizaciones para construir un Ecuador más justo, productivo y lleno de oportunidades.</p>
+                    <ul class="mission-features">
+                        <li><i class="bi bi-check-circle-fill"></i> Programas EDIFICA de desarrollo personal</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Shows y conferencias motivacionales</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Servicios de acompañamiento empresarial</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Red de apoyo en todo el Ecuador</li>
+                    </ul>
+                </div>
+                <div class="mission-visual animate-right">
+                    <div class="mission-stat-card">
+                        <span class="mission-stat-num">10+</span>
+                        <span class="mission-stat-label">Años transformando vidas en Ecuador</span>
+                    </div>
+                    <div class="mission-stat-card">
+                        <span class="mission-stat-num" style="color: var(--azul-claro);">24</span>
+                        <span class="mission-stat-label" style="color: var(--text-secondary);">Provincias alcanzadas</span>
+                    </div>
+                    <div class="mission-stat-card">
+                        <span class="mission-stat-num" style="color: var(--azul-claro);">98%</span>
+                        <span class="mission-stat-label" style="color: var(--text-secondary);">Satisfacción</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt" th:if="${newsList != null and !newsList.isEmpty()}">
+        <div class="container">
+            <div class="section-header animate">
+                <h2 class="section-title">Últimas Noticias</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Mantente informado sobre nuestras actividades y novedades.</p>
+            </div>
+            <div class="news-grid">
+                <div class="card news-card animate" th:each="news, stat : ${newsList}" th:if="${stat.index < 3}">
+                    <img th:if="${news.imageUrl != null and !news.imageUrl.isEmpty()}"
+                         th:src="${news.imageUrl}" th:alt="${news.title}"
+                         onerror="this.style.display='none'"/>
+                    <div style="height: 200px; background: linear-gradient(135deg, var(--azul), var(--azul-medio)); display: flex; align-items: center; justify-content: center;"
+                         th:if="${news.imageUrl == null or news.imageUrl.isEmpty()}">
+                        <i class="bi bi-newspaper" style="font-size: 3rem; color: rgba(255,255,255,0.30);"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="news-card-meta">
+                            <span class="badge badge-success">
+                                <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Publicado
+                            </span>
+                            <span class="news-date"
+                                  th:text="${#temporals.format(news.publishedAt, 'dd MMM yyyy')}"></span>
+                        </div>
+                        <h3 class="card-title" th:text="${news.title}">Título</h3>
+                        <p class="card-text" th:text="${news.summary}">Resumen</p>
+                        <a th:href="@{/noticias/{id}(id=${news.id})}" class="btn btn-secondary btn-sm"
+                           style="margin-top: 1rem;">
+                            Leer más <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2.5rem;">
+                <a th:href="@{/noticias}" class="btn btn-primary">
+                    <i class="bi bi-newspaper"></i> Ver todas las noticias
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" th:if="${testimonials != null and !testimonials.isEmpty()}">
+        <div class="container">
+            <div class="section-header animate">
+                <h2 class="section-title">Historias de Éxito</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Conoce a las personas que han transformado su vida con nosotros.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate"
+                     th:each="testimonial, stat : ${testimonials}" th:if="${stat.index < 4}">
+                    <img th:if="${testimonial.photoUrl != null and !testimonial.photoUrl.isEmpty()}"
+                         th:src="${testimonial.photoUrl}" th:alt="${testimonial.name}"
+                         class="testimonial-avatar" onerror="this.style.display='none'"/>
+                    <div class="testimonial-avatar-placeholder"
+                         th:if="${testimonial.photoUrl == null or testimonial.photoUrl.isEmpty()}"
+                         th:text="${#strings.substring(testimonial.name, 0, 1)}">A</div>
+                    <div class="testimonial-name" th:text="${testimonial.name}">Nombre</div>
+                    <div class="testimonial-social">
+                        <a th:if="${testimonial.instagramUrl != null and !testimonial.instagramUrl.isEmpty()}"
+                           th:href="${testimonial.instagramUrl}" target="_blank">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a th:if="${testimonial.facebookUrl != null and !testimonial.facebookUrl.isEmpty()}"
+                           th:href="${testimonial.facebookUrl}" target="_blank">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2.5rem;">
+                <a th:href="@{/testimonios}" class="btn btn-primary">
+                    <i class="bi bi-chat-quote"></i> Ver todos los testimonios
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container animate">
+            <h2>¿Listo para transformar tu futuro?</h2>
+            <p>Contáctanos hoy y descubre cómo podemos acompañarte en tu camino hacia el éxito.</p>
+            <a th:href="@{/contacto}" class="btn btn-gold"
+               style="font-size: 1rem; padding: 0.85rem 2rem;">
+                <i class="bi bi-send-fill"></i> Solicitar información
+            </a>
+        </div>
+    </section>
+
+</th:block>
+<th:block th:fragment="scripts">
+    <script>
+        (function () {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const COLORS = [
+                { r: 255, g: 221, b:   0 },  // amarillo
+                { r:   3, g:  78, b: 162 },  // azul
+                { r: 228, g:  52, b:  91 },  // rojo/rosa
+            ];
+            function resize() {
+                canvas.width  = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            function makeBeam() {
+                const c = COLORS[Math.floor(Math.random() * COLORS.length)];
+                return {
+                    y:       Math.random() * canvas.height,
+                    angle:   (Math.random() - 0.5) * 0.06,
+                    speed:   canvas.width * (0.012 + Math.random() * 0.018),
+                    length:  canvas.width * (0.12 + Math.random() * 0.18),
+                    x:       -canvas.width * 0.25,
+                    width:   0.8 + Math.random() * 2.2,
+                    r: c.r, g: c.g, b: c.b,
+                    alpha:   0.35 + Math.random() * 0.35,
+                    delay:   Math.random() * 2800,
+                    active:  false,
+                    timer:   0,
+                };
+            }
+            const POOL = 9;
+            const beams = Array.from({ length: POOL }, makeBeam);
+            let last = 0;
+            function tick(ts) {
+                const dt = ts - last || 16;
+                last = ts;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                beams.forEach(b => {
+                    if (!b.active) {
+                        b.timer += dt;
+                        if (b.timer >= b.delay) {
+                            b.active = true;
+                            b.x = -b.length;
+                            b.y = Math.random() * canvas.height;
+                            b.angle = (Math.random() - 0.5) * 0.06;
+                        }
+                        return;
+                    }
+                    b.x += b.speed * (dt / 16);
+                    const x0 = b.x - b.length;
+                    const y0 = b.y + x0 * b.angle;
+                    const x1 = b.x;
+                    const y1 = b.y + x1 * b.angle;
+                    const grad = ctx.createLinearGradient(x0, y0, x1, y1);
+                    grad.addColorStop(0,   `rgba(${b.r},${b.g},${b.b},0)`);
+                    grad.addColorStop(0.5, `rgba(${b.r},${b.g},${b.b},${b.alpha * 0.5})`);
+                    grad.addColorStop(1,   `rgba(${b.r},${b.g},${b.b},${b.alpha})`);
+                    ctx.beginPath();
+                    ctx.moveTo(x0, y0);
+                    ctx.lineTo(x1, y1);
+                    ctx.strokeStyle = grad;
+                    ctx.lineWidth   = b.width;
+                    ctx.shadowColor = `rgba(${b.r},${b.g},${b.b},0.8)`;
+                    ctx.shadowBlur  = 8 + b.width * 3;
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(x0, y0);
+                    ctx.lineTo(x1, y1);
+                    ctx.strokeStyle = `rgba(255,255,255,${b.alpha * 0.55})`;
+                    ctx.lineWidth   = b.width * 0.3;
+                    ctx.shadowBlur  = 4;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                    if (b.x - b.length > canvas.width) {
+                        Object.assign(b, makeBeam());
+                    }
+                });
+                requestAnimationFrame(tick);
+            }
+
+            requestAnimationFrame(tick);
+        })();
+    </script>
+</th:block>
+</body>
+</html>

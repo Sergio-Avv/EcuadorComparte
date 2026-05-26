@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles"></th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-pencil-fill"></i> Editar Noticia</h1>
+            <p>Actualiza la información de la noticia.</p>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 3rem;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="card">
+                <div class="card-body" style="padding: 2.5rem;">
+                    <form th:action="@{/admin/news/{id}(id=${newsId})}"
+                          th:object="${news}" method="post">
+                        <input type="hidden" name="_method" value="PUT"/>
+                        <div class="form-group">
+                            <label class="form-label" for="title">
+                                <i class="bi bi-type-h1"></i> Título
+                            </label>
+                            <input type="text" id="title" th:field="*{title}" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="summary">
+                                <i class="bi bi-text-paragraph"></i> Resumen
+                            </label>
+                            <textarea id="summary" th:field="*{summary}"
+                                      class="form-control" style="min-height: 90px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="content">
+                                <i class="bi bi-file-text"></i> Contenido
+                            </label>
+                            <textarea id="content" th:field="*{content}"
+                                      class="form-control" style="min-height: 200px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="imageUrl">
+                                <i class="bi bi-image"></i> URL de imagen principal
+                            </label>
+                            <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control"/>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="author">
+                                    <i class="bi bi-person"></i> Autor
+                                </label>
+                                <input type="text" id="author" th:field="*{author}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="status">
+                                    <i class="bi bi-toggle-on"></i> Estado
+                                </label>
+                                <select id="status" th:field="*{status}" class="form-control">
+                                    <option th:each="e : ${newsStatuses}"
+                                            th:value="${e.name()}"
+                                            th:text="${e.name() == 'PUBLISHED'} ? 'Publicado' : 'Borrador'">Estado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="publishedAt">
+                                    <i class="bi bi-calendar3"></i> Fecha de publicación
+                                </label>
+                                <input type="datetime-local" id="publishedAt"
+                                       th:field="*{publishedAt}" class="form-control"/>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <a th:href="@{/admin/news}" class="btn btn-secondary">
+                                <i class="bi bi-x"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Actualizar noticia
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

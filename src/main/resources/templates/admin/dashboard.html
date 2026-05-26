@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles"></th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-grid-fill"></i> Panel de Administración</h1>
+            <p>Bienvenido, administrador. Gestiona el contenido del portal.</p>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 3rem;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+
+            <div class="card">
+                <div class="card-body" style="text-align: center; padding: 2rem;">
+                    <div style="width: 60px; height: 60px; background: rgba(13,27,75,0.10); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                        <i class="bi bi-envelope-fill" style="font-size: 1.5rem; color: var(--azul);"></i>
+                    </div>
+                    <h2 class="card-title">Solicitudes de Contacto</h2>
+                    <p class="card-text" style="margin-bottom: 1.5rem;">Revisa y gestiona las solicitudes recibidas de usuarios.</p>
+                    <a th:href="@{/admin/contact-requests}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-arrow-right"></i> Ver solicitudes
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body" style="text-align: center; padding: 2rem;">
+                    <div style="width: 60px; height: 60px; background: rgba(13,27,75,0.10); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                        <i class="bi bi-chat-quote-fill" style="font-size: 1.5rem; color: var(--azul);"></i>
+                    </div>
+                    <h2 class="card-title">Testimonios</h2>
+                    <p class="card-text" style="margin-bottom: 1.5rem;">Crea, edita y elimina testimonios de éxito.</p>
+                    <a th:href="@{/admin/testimonials}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-arrow-right"></i> Ver testimonios
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body" style="text-align: center; padding: 2rem;">
+                    <div style="width: 60px; height: 60px; background: rgba(13,27,75,0.10); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                        <i class="bi bi-newspaper" style="font-size: 1.5rem; color: var(--azul);"></i>
+                    </div>
+                    <h2 class="card-title">Noticias</h2>
+                    <p class="card-text" style="margin-bottom: 1.5rem;">Publica, edita y elimina noticias del portal.</p>
+                    <a th:href="@{/admin/news}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-arrow-right"></i> Ver noticias
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

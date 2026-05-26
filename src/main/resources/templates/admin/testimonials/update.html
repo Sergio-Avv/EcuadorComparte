@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles"></th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-pencil-fill"></i> Editar Testimonio</h1>
+            <p>Actualiza la información del testimonio.</p>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 3rem;">
+        <div style="max-width: 650px; margin: 0 auto;">
+            <div class="card">
+                <div class="card-body" style="padding: 2.5rem;">
+                    <form th:action="@{/admin/testimonials/{id}(id=${testimonialId})}"
+                          th:object="${testimonial}" method="post">
+                        <input type="hidden" name="_method" value="PUT"/>
+                        <div class="form-group">
+                            <label class="form-label" for="name">
+                                <i class="bi bi-person"></i> Nombre
+                            </label>
+                            <input type="text" id="name" th:field="*{name}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="photoUrl">
+                                <i class="bi bi-image"></i> URL de la foto
+                            </label>
+                            <input type="text" id="photoUrl" th:field="*{photoUrl}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="instagramUrl">
+                                <i class="bi bi-instagram"></i> Instagram (opcional)
+                            </label>
+                            <input type="text" id="instagramUrl" th:field="*{instagramUrl}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="facebookUrl">
+                                <i class="bi bi-facebook"></i> Facebook (opcional)
+                            </label>
+                            <input type="text" id="facebookUrl" th:field="*{facebookUrl}"
+                                   class="form-control"/>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <a th:href="@{/admin/testimonials}" class="btn btn-secondary">
+                                <i class="bi bi-x"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Actualizar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+<th:block th:fragment="scripts">
+    <script>
+        (function () {
+            function validarUrl(input, campo) {
+                const val = input.value.trim();
+                if (!val) {
+                    // photoUrl es obligatorio, los social son opcionales
+                    if (input.id === 'photoUrl') {
+                        input.setCustomValidity('La URL de la foto es obligatoria.');
+                        return false;
+                    }
+                    return true;
+                }
+                if (!val.startsWith('http://') && !val.startsWith('https://')) {
+                    input.setCustomValidity('El enlace de ' + campo + ' debe comenzar con http:// o https://');
+                    return false;
+                }
+                input.setCustomValidity('');
+                return true;
+            }
+
+            const photoInput     = document.getElementById('photoUrl');
+            const instagramInput = document.getElementById('instagramUrl');
+            const facebookInput  = document.getElementById('facebookUrl');
+
+            const campos = [
+                { input: photoInput,     nombre: 'la foto' },
+                { input: instagramInput, nombre: 'Instagram' },
+                { input: facebookInput,  nombre: 'Facebook' }
+            ];
+
+            campos.forEach(function ({ input, nombre }) {
+                if (!input) return;
+                input.addEventListener('input', function () {
+                    validarUrl(input, nombre);
+                    input.reportValidity();
+                });
+                input.addEventListener('blur', function () {
+                    validarUrl(input, nombre);
+                    input.reportValidity();
+                });
+            });
+
+            document.querySelector('form').addEventListener('submit', function (e) {
+                let valido = true;
+                let primeroInvalido = null;
+                campos.forEach(function ({ input, nombre }) {
+                    if (!input) return;
+                    if (!validarUrl(input, nombre)) {
+                        valido = false;
+                        if (!primeroInvalido) primeroInvalido = input;
+                    }
+                });
+                if (!valido) {
+                    e.preventDefault();
+                    primeroInvalido.reportValidity();
+                }
+            });
+        })();
+    </script>
+</th:block>
+</body>
+</html>

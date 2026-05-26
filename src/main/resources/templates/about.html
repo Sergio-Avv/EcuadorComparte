@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            .about-hero {
+                background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
+                padding: 4rem 0;
+                color: var(--blanco);
+                text-align: center;
+            }
+
+            .about-hero h1 {
+                font-family: var(--font-display);
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+            }
+
+            .about-hero p { font-size: 1rem; opacity: 0.80; max-width: 500px; margin: 0 auto; }
+
+            .about-section { padding: 5rem 0; }
+
+            .about-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: center;
+                margin-bottom: 5rem;
+            }
+
+            .about-text h2 {
+                font-family: var(--font-display);
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+
+            .about-text p {
+                color: var(--text-secondary);
+                line-height: 1.8;
+                margin-bottom: 1.25rem;
+            }
+
+            .values-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+                margin-top: 3rem;
+            }
+
+            .value-card {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 2rem;
+                text-align: center;
+                transition: transform var(--transition), box-shadow var(--transition);
+            }
+
+            .value-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+
+            .value-icon {
+                width: 60px;
+                height: 60px;
+                background: var(--azul);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1rem;
+                font-size: 1.4rem;
+                color: var(--amarillo);
+            }
+
+            .value-title {
+                font-family: var(--font-display);
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+
+            .value-desc { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; }
+
+            .team-section { background: var(--bg-surface); padding: 5rem 0; }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+                margin-top: 3rem;
+            }
+
+            .stat-card {
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 2rem;
+                text-align: center;
+            }
+
+            .stat-num {
+                font-family: var(--font-display);
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--azul);
+                display: block;
+            }
+
+            [data-theme="dark"] .stat-num { color: var(--amarillo); }
+
+            .stat-label { color: var(--text-secondary); font-size: 0.88rem; }
+
+            @media (max-width: 768px) {
+                .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+                .values-grid { grid-template-columns: 1fr; }
+                .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="about-hero">
+        <div class="container animate">
+            <h1>Sobre Nosotros</h1>
+            <p>Conoce nuestra historia, misión y los valores que nos guían cada día.</p>
+        </div>
+    </div>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text animate-left">
+                    <h2>Quiénes somos</h2>
+                    <p>Ecuador Comparte es una fundación dedicada al desarrollo humano, social y empresarial en Ecuador. Nacimos con la convicción de que cada persona tiene el potencial de transformar su vida y la de quienes la rodean.</p>
+                    <p>A lo largo de los años hemos acompañado a miles de personas, familias y organizaciones en su camino hacia el crecimiento, ofreciendo programas, servicios y espacios de aprendizaje que generan impacto real.</p>
+                    <a th:href="@{/contacto}" class="btn btn-primary">
+                        <i class="bi bi-send"></i> Contáctanos
+                    </a>
+                </div>
+                <div class="animate-right">
+                    <div style="background: linear-gradient(135deg, var(--azul), var(--azul-medio)); border-radius: var(--radius); padding: 3rem; color: var(--blanco); text-align: center;">
+                        <i class="bi bi-heart-fill" style="font-size: 3rem; color: var(--amarillo); display: block; margin-bottom: 1rem;"></i>
+                        <p style="font-family: var(--font-display); font-size: 1.3rem; line-height: 1.6; font-style: italic;">
+                            "Creemos en el poder del conocimiento y el acompañamiento para transformar vidas en Ecuador."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 class="section-title animate">Nuestros Valores</h2>
+                <div class="section-divider" style="margin: 0.75rem auto 0;"></div>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card animate">
+                    <div class="value-icon"><i class="bi bi-people-fill"></i></div>
+                    <div class="value-title">Compromiso</div>
+                    <div class="value-desc">Nos comprometemos con cada persona que acompaña nuestros programas, brindando apoyo genuino y continuo.</div>
+                </div>
+                <div class="value-card animate">
+                    <div class="value-icon"><i class="bi bi-lightbulb-fill"></i></div>
+                    <div class="value-title">Innovación</div>
+                    <div class="value-desc">Buscamos constantemente nuevas formas de generar impacto positivo a través de metodologías modernas.</div>
+                </div>
+                <div class="value-card animate">
+                    <div class="value-icon"><i class="bi bi-shield-fill-check"></i></div>
+                    <div class="value-title">Integridad</div>
+                    <div class="value-desc">Actuamos con transparencia y honestidad en todo lo que hacemos, generando confianza en nuestra comunidad.</div>
+                </div>
+                <div class="value-card animate">
+                    <div class="value-icon"><i class="bi bi-globe-americas"></i></div>
+                    <div class="value-title">Impacto Social</div>
+                    <div class="value-desc">Cada acción que tomamos está orientada a generar un cambio positivo en la sociedad ecuatoriana.</div>
+                </div>
+                <div class="value-card animate">
+                    <div class="value-icon"><i class="bi bi-star-fill"></i></div>
+                    <div class="value-title">Excelencia</div>
+                    <div class="value-desc">Nos esforzamos por ofrecer la más alta calidad en todos nuestros programas y servicios.</div>
+                </div>
+                <div class="value-card animate">
+                    <div class="value-icon"><i class="bi bi-hand-thumbs-up-fill"></i></div>
+                    <div class="value-title">Colaboración</div>
+                    <div class="value-desc">Trabajamos en conjunto con familias, empresas y comunidades para multiplicar el impacto.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 class="section-title animate">Nuestro Impacto</h2>
+                <div class="section-divider" style="margin: 0.75rem auto 1.5rem;"></div>
+                <p class="section-subtitle animate">Números que reflejan nuestro compromiso con Ecuador.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card animate">
+                    <span class="stat-num">+5,000</span>
+                    <span class="stat-label">Personas beneficiadas</span>
+                </div>
+                <div class="stat-card animate">
+                    <span class="stat-num">+120</span>
+                    <span class="stat-label">Programas realizados</span>
+                </div>
+                <div class="stat-card animate">
+                    <span class="stat-num">24</span>
+                    <span class="stat-label">Provincias alcanzadas</span>
+                </div>
+                <div class="stat-card animate">
+                    <span class="stat-num">10+</span>
+                    <span class="stat-label">Años de trayectoria</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

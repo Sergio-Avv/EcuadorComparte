@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            .filter-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.25rem 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .filter-grid {
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+                gap: 0.75rem;
+                align-items: end;
+            }
+            @media (max-width: 800px) {
+                .filter-grid { grid-template-columns: 1fr 1fr; }
+            }
+            .filter-label {
+                font-size: 0.78rem;
+                font-weight: 600;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                margin-bottom: 0.3rem;
+            }
+            .filter-active-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
+                background: rgba(3,78,162,0.1);
+                color: var(--azul-oscuro);
+                border-radius: 20px;
+                font-size: 0.78rem;
+                font-weight: 600;
+                padding: 2px 10px;
+            }
+            .btn-excel {
+                background: #1d6f42;
+                color: #fff;
+                border: none;
+            }
+            .btn-excel:hover { background: #175a35; color: #fff; }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-newspaper"></i> Noticias</h1>
+            <p>Gestiona las noticias publicadas en el portal.</p>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 3rem;">
+
+        <!-- Filtros -->
+        <div class="filter-card">
+            <form th:action="@{/admin/news}" method="get">
+                <div class="filter-grid">
+                    <div>
+                        <div class="filter-label">Título</div>
+                        <input type="text" name="title" class="form-control"
+                               placeholder="Buscar por título..."
+                               th:value="${filterTitle}"/>
+                    </div>
+                    <div>
+                        <div class="filter-label">Estado</div>
+                        <select name="status" class="form-control">
+                            <option value="">Todos</option>
+                            <option th:each="s : ${newsStatuses}"
+                                    th:value="${s.name()}"
+                                    th:text="${s.visualName}"
+                                    th:selected="${s == filterStatus}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="filter-label">Desde</div>
+                        <input type="date" name="dateFrom" class="form-control"
+                               th:value="${filterDateFrom}"/>
+                    </div>
+                    <div>
+                        <div class="filter-label">Hasta</div>
+                        <input type="date" name="dateTo" class="form-control"
+                               th:value="${filterDateTo}"/>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem; align-items: center;">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                    <a th:href="@{/admin/news}" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-x-lg"></i> Limpiar
+                    </a>
+                    <span th:if="${hasFilter}" class="filter-active-badge">
+                        <i class="bi bi-funnel-fill"></i> Filtro activo
+                    </span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Barra superior -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="font-size: 0.92rem; color: var(--text-secondary);">
+                <span th:text="${newsList.size()}">0</span> noticias encontradas
+            </div>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a th:href="@{/admin/news/export/excel(
+                        title=${filterTitle},
+                        status=${filterStatus != null ? filterStatus.name() : null},
+                        dateFrom=${filterDateFrom},
+                        dateTo=${filterDateTo})}"
+                   class="btn btn-excel btn-sm">
+                    <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+                </a>
+                <a th:href="@{/admin}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                <a th:href="@{/admin/news/create}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> Nueva noticia
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${newsList.isEmpty()}" style="text-align: center; padding: 4rem 0; color: var(--text-secondary);">
+            <i class="bi bi-newspaper" style="font-size: 3rem; display: block; margin-bottom: 1rem; opacity: 0.40;"></i>
+            <h3 th:text="${hasFilter} ? 'Sin resultados para esos filtros.' : 'No hay noticias aún.'">Sin resultados</h3>
+            <a th:if="${!hasFilter}" th:href="@{/admin/news/create}" class="btn btn-primary" style="margin-top: 1rem;">
+                <i class="bi bi-plus-lg"></i> Crear primera noticia
+            </a>
+        </div>
+
+        <div class="table-wrapper" th:if="${!newsList.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="news : ${newsList}">
+                    <td th:text="${news.id}">1</td>
+                    <td th:text="${news.title}">Título</td>
+                    <td th:text="${news.author}">Autor</td>
+                    <td>
+                        <span class="badge badge-success"
+                              th:if="${news.status != null and news.status.name() == 'PUBLISHED'}">Publicado</span>
+                        <span class="badge badge-warning"
+                              th:if="${news.status == null or news.status.name() == 'DRAFT'}">Borrador</span>
+                    </td>
+                    <td th:text="${news.publishedAt != null} ? ${#temporals.format(news.publishedAt, 'dd/MM/yyyy')} : '—'">Fecha</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a th:href="@{/admin/news/edit/{id}(id=${news.id})}" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a th:href="@{/admin/news/delete/{id}(id=${news.id})}" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            .contact-hero {
+                background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
+                padding: 4rem 0;
+                color: var(--blanco);
+                text-align: center;
+            }
+
+            .contact-hero h1 {
+                font-family: var(--font-display);
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+            }
+
+            .contact-hero p {
+                font-size: 1rem;
+                opacity: 0.80;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .contact-section { padding: 5rem 0; }
+
+            .contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1.6fr;
+                gap: 3rem;
+                align-items: start;
+            }
+
+            .contact-info { display: flex; flex-direction: column; gap: 1.25rem; }
+
+            .contact-info-card {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.25rem 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                transition: transform var(--transition), box-shadow var(--transition);
+            }
+
+            .contact-info-card:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .contact-info-icon {
+                width: 48px;
+                height: 48px;
+                background: var(--azul);
+                border-radius: var(--radius-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                color: var(--amarillo);
+                flex-shrink: 0;
+            }
+
+            .contact-info-label {
+                font-size: 0.78rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--text-secondary);
+                margin-bottom: 0.2rem;
+            }
+
+            .contact-info-value {
+                font-size: 0.95rem;
+                font-weight: 500;
+                color: var(--text-primary);
+            }
+
+            .contact-form-card {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 2.5rem;
+                box-shadow: var(--shadow);
+            }
+
+            .contact-form-title {
+                font-family: var(--font-display);
+                font-size: 1.5rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+            .contact-form-subtitle {
+                color: var(--text-secondary);
+                font-size: 0.92rem;
+                margin-bottom: 2rem;
+            }
+
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+
+            .purpose-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.75rem;
+                margin-top: 0.4rem;
+            }
+
+            .purpose-option { position: relative; }
+
+            .purpose-option input[type="radio"] {
+                position: absolute;
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .purpose-label {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 1rem 0.75rem;
+                background: var(--bg);
+                border: 1.5px solid var(--border);
+                border-radius: var(--radius-sm);
+                cursor: pointer;
+                transition: all var(--transition);
+                text-align: center;
+                font-size: 0.82rem;
+                font-weight: 500;
+                color: var(--text-secondary);
+            }
+
+            .purpose-label i {
+                font-size: 1.4rem;
+                color: var(--azul-claro);
+                transition: color var(--transition);
+            }
+
+            .purpose-option input[type="radio"]:checked + .purpose-label {
+                border-color: var(--azul-claro);
+                background: rgba(44,77,168,0.08);
+                color: var(--azul-claro);
+            }
+
+            .purpose-option input[type="radio"]:checked + .purpose-label i {
+                color: var(--amarillo);
+            }
+
+            .purpose-label:hover {
+                border-color: var(--azul-claro);
+                transform: translateY(-2px);
+            }
+
+            .success-message {
+                display: none;
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .success-message.show { display: block; }
+
+            .success-icon {
+                width: 72px;
+                height: 72px;
+                background: rgba(44,77,168,0.12);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.25rem;
+                font-size: 2rem;
+                color: var(--azul-claro);
+            }
+
+            .success-message h3 {
+                font-family: var(--font-display);
+                font-size: 1.4rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .success-message p {
+                color: var(--text-secondary);
+                font-size: 0.92rem;
+            }
+
+            @media (max-width: 768px) {
+                .contact-grid { grid-template-columns: 1fr; }
+                .form-row { grid-template-columns: 1fr; }
+                .purpose-grid { grid-template-columns: 1fr; }
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="contact-hero">
+        <div class="container animate">
+            <h1><i class="bi bi-envelope-fill"></i> Contáctanos</h1>
+            <p>Estamos aquí para ayudarte. Déjanos tus datos y nos pondremos en contacto contigo.</p>
+        </div>
+    </div>
+
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+
+                <div class="contact-info animate-left">
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div>
+                            <div class="contact-info-label">Ubicación</div>
+                            <div class="contact-info-value">Quito, Ecuador</div>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="bi bi-envelope-fill"></i></div>
+                        <div>
+                            <div class="contact-info-label">Correo</div>
+                            <div class="contact-info-value">info@ecuadorcomparte.com</div>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="bi bi-telephone-fill"></i></div>
+                        <div>
+                            <div class="contact-info-label">Teléfono</div>
+                            <div class="contact-info-value">+59 0000000000000</div>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="bi bi-clock-fill"></i></div>
+                        <div>
+                            <div class="contact-info-label">Horario</div>
+                            <div class="contact-info-value">Lun - Vie, 00am - 00pm</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 0.5rem;">
+                        <div style="font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                            Síguenos
+                        </div>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <a href="#" style="width: 40px; height: 40px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all var(--transition);"
+                               onmouseover="this.style.background='var(--azul)'; this.style.color='var(--amarillo)'"
+                               onmouseout="this.style.background='var(--bg-surface)'; this.style.color='var(--text-secondary)'">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="#" style="width: 40px; height: 40px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all var(--transition);"
+                               onmouseover="this.style.background='var(--azul)'; this.style.color='var(--amarillo)'"
+                               onmouseout="this.style.background='var(--bg-surface)'; this.style.color='var(--text-secondary)'">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="#" style="width: 40px; height: 40px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all var(--transition);"
+                               onmouseover="this.style.background='var(--azul)'; this.style.color='var(--amarillo)'"
+                               onmouseout="this.style.background='var(--bg-surface)'; this.style.color='var(--text-secondary)'">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-card animate-right">
+                    <div id="formContent">
+                        <div class="contact-form-title">Envíanos un mensaje</div>
+                        <div class="contact-form-subtitle">Completa el formulario y te responderemos a la brevedad.</div>
+
+                        <div th:if="${param.success}" class="alert alert-success">
+                            <i class="bi bi-check-circle"></i> Tu solicitud fue enviada correctamente.
+                        </div>
+                        <div th:if="${param.error}" class="alert alert-danger">
+                            <i class="bi bi-exclamation-circle"></i> Ocurrió un error. Intenta nuevamente.
+                        </div>
+
+                        <form th:action="@{/contacto}" th:object="${contactRequest}" method="post" id="contactForm">
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="name">
+                                        <i class="bi bi-person"></i> Nombre completo
+                                    </label>
+                                    <input type="text"
+                                           id="name"
+                                           th:field="*{name}"
+                                           class="form-control"
+                                           placeholder="Tu nombre"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="phone">
+                                        <i class="bi bi-telephone"></i> Teléfono
+                                    </label>
+                                    <input type="text"
+                                           id="phone"
+                                           th:field="*{phone}"
+                                           class="form-control"
+                                           placeholder="+593 99 000 0000"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="email">
+                                    <i class="bi bi-envelope"></i> Correo electrónico
+                                </label>
+                                <input type="email"
+                                       id="email"
+                                       th:field="*{email}"
+                                       class="form-control"
+                                       placeholder="tu@correo.com"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="bi bi-grid"></i> ¿En qué estás interesado?
+                                </label>
+                                <div class="purpose-grid">
+                                    <div class="purpose-option">
+                                        <input type="radio" id="service"
+                                               th:field="*{purpose}"
+                                               value="SERVICE"/>
+                                        <label class="purpose-label" for="service">
+                                            <i class="bi bi-briefcase-fill"></i>
+                                            Servicio
+                                        </label>
+                                    </div>
+                                    <div class="purpose-option">
+                                        <input type="radio" id="edifica"
+                                               th:field="*{purpose}"
+                                               value="EDIFICA_PROGRAM"/>
+                                        <label class="purpose-label" for="edifica">
+                                            <i class="bi bi-mortarboard-fill"></i>
+                                            Programa EDIFICA
+                                        </label>
+                                    </div>
+                                    <div class="purpose-option">
+                                        <input type="radio" id="shows"
+                                               th:field="*{purpose}"
+                                               value="SHOWS_AND_CONFERENCES"/>
+                                        <label class="purpose-label" for="shows">
+                                            <i class="bi bi-mic-fill"></i>
+                                            Shows y Conferencias
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary"
+                                    style="width: 100%; justify-content: center; margin-top: 0.5rem; padding: 0.85rem;">
+                                <i class="bi bi-send-fill"></i> Enviar solicitud
+                            </button>
+
+                        </form>
+                    </div>
+
+                    <div class="success-message" id="successMessage" th:classappend="${param.success} ? 'show'">
+                        <div class="success-icon">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <h3>¡Mensaje enviado!</h3>
+                        <p>Gracias por contactarnos. Nos pondremos en contacto contigo pronto.</p>
+                        <a th:href="@{/}" class="btn btn-primary" style="margin-top: 1.5rem;">
+                            <i class="bi bi-house"></i> Volver al inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</th:block>
+<th:block th:fragment="scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hasSuccess = window.location.search.includes('success');
+            if (hasSuccess) {
+                document.getElementById('formContent').style.display = 'none';
+                document.getElementById('successMessage').classList.add('show');
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html>

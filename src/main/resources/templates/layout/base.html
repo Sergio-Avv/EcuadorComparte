@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="layout(content, styles, scripts)"
+      th:lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title} ? ${title} + ' | Ecuador Comparte' : 'Ecuador Comparte'">Ecuador Comparte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <th:block th:replace="~{::styles}"></th:block>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-inner">
+
+        <a th:href="@{/}" class="navbar-brand">
+            <img th:src="@{/images/logo-ecuador.png}" alt="Ecuador Comparte" class="navbar-logo"/>
+        </a>
+
+        <button class="navbar-toggle" onclick="toggleMenu()" aria-label="Menú">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <ul class="navbar-links" id="navLinks">
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/sobre-nosotros}">Sobre nosotros</a></li>
+            <li><a th:href="@{/noticias}">Noticias</a></li>
+            <li><a th:href="@{/testimonios}">Testimonios</a></li>
+            <li><a th:href="@{/contacto}">Contacto</a></li>
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/admin}" class="btn-nav-admin">
+                    <i class="bi bi-grid-fill"></i> Admin
+                </a>
+            </li>
+        </ul>
+
+        <div class="navbar-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema" title="Modo oscuro"></button>
+            <span sec:authorize="isAuthenticated()">
+                <a th:href="@{/logout}" style="color:rgba(255,255,255,0.70); font-size:0.88rem;">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </span>
+        </div>
+
+    </div>
+</nav>
+
+<main>
+    <th:block th:replace="~{::content}"></th:block>
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand">Ecuador Comparte</div>
+                <p class="footer-desc">Impulsamos el progreso humano y productivo de personas, familias y empresas en Ecuador. Acompañamos a quienes buscan reconstruir su futuro.</p>
+                <div class="footer-social">
+                    <a href="https://www.facebook.com/Ccomparte" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="https://www.instagram.com/latinoamericacomparte?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/latinoam%C3%A9rica-comparte-emprendimiento-conferencias-productividad-empresarial/" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@colombiacomparte" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="footer-heading">Navegación</div>
+                <ul class="footer-links">
+                    <li><a th:href="@{/}">Inicio</a></li>
+                    <li><a th:href="@{/sobre-nosotros}">Sobre nosotros</a></li>
+                    <li><a th:href="@{/noticias}">Noticias</a></li>
+                    <li><a th:href="@{/testimonios}">Testimonios</a></li>
+                    <li><a th:href="@{/contacto}">Contacto</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-heading">Contacto</div>
+                <ul class="footer-links">
+                    <li><i class="bi bi-envelope"></i> info@ecuadorcomparte.com</li>
+                    <li><i class="bi bi-telephone"></i> +53 00000000000</li>
+                    <li><i class="bi bi-geo-alt"></i> Quito, Ecuador</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Ecuador Comparte. Todos los derechos reservados.</span>
+            <span>Hecho con <i class="bi bi-heart-fill" style="color:var(--amarillo)"></i></span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+    }
+
+    function toggleMenu() {
+        document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('click', function(e) {
+            const nav = document.getElementById('navLinks');
+            const toggle = document.querySelector('.navbar-toggle');
+            if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+                nav.classList.remove('open');
+            }
+        });
+
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.navbar-links a').forEach(link => {
+            const linkPath = link.getAttribute('href');
+            if (linkPath === currentPath ||
+                (linkPath !== '/' && currentPath.startsWith(linkPath))) {
+                link.classList.add('active');
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.animate, .animate-left, .animate-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (
+                    !href ||
+                    href.startsWith('#') ||
+                    href.startsWith('http') ||
+                    href.startsWith('mailto') ||
+                    this.hasAttribute('target')
+                ) return;
+
+                e.preventDefault();
+                document.querySelector('main').style.animation = 'pageOut 0.3s ease forwards';
+
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 280);
+            });
+        });
+
+    });
+</script>
+
+<th:block th:replace="~{::scripts}"></th:block>
+
+</body>
+</html>

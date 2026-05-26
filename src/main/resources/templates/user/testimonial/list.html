@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            .testimonials-hero {
+                background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
+                padding: 4rem 0;
+                color: var(--blanco);
+                text-align: center;
+            }
+
+            .testimonials-hero h1 {
+                font-family: var(--font-display);
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+            }
+
+            .testimonials-hero p { font-size: 1rem; opacity: 0.80; }
+
+            .testimonials-section { padding: 5rem 0; }
+
+            .testimonials-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+            }
+
+            .testimonial-card {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 2rem 1.5rem;
+                text-align: center;
+                transition: transform var(--transition), box-shadow var(--transition);
+            }
+
+            .testimonial-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+            .testimonial-avatar {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin: 0 auto 1rem;
+                border: 3px solid var(--azul-claro);
+            }
+
+            .testimonial-avatar-placeholder {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--azul), var(--azul-medio));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1rem;
+                font-family: var(--font-display);
+                font-size: 1.8rem;
+                color: var(--amarillo);
+                border: 3px solid var(--azul-claro);
+            }
+
+            .testimonial-name {
+                font-family: var(--font-display);
+                font-size: 1.05rem;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+            }
+
+            .testimonial-social {
+                display: flex;
+                justify-content: center;
+                gap: 0.6rem;
+            }
+
+            .testimonial-social a {
+                width: 34px;
+                height: 34px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+                transition: all var(--transition);
+            }
+
+            .testimonial-social a:hover {
+                background: var(--azul);
+                color: var(--amarillo);
+                border-color: var(--azul);
+                transform: translateY(-2px);
+            }
+
+            .testimonials-empty {
+                text-align: center;
+                padding: 5rem 0;
+                color: var(--text-secondary);
+            }
+
+            .testimonials-empty i { font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.40; }
+
+            @media (max-width: 768px) {
+                .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="testimonials-hero">
+        <div class="container animate">
+            <h1><i class="bi bi-chat-quote-fill"></i> Historias de Éxito</h1>
+            <p>Conoce a las personas que han transformado su vida con nosotros.</p>
+        </div>
+    </div>
+
+    <section class="testimonials-section">
+        <div class="container">
+            <div th:if="${testimonials == null or testimonials.isEmpty()}" class="testimonials-empty">
+                <i class="bi bi-chat-quote"></i>
+                <h3>No hay testimonios aún.</h3>
+                <p>Pronto compartiremos historias de éxito.</p>
+            </div>
+            <div class="testimonials-grid" th:if="${testimonials != null and !testimonials.isEmpty()}">
+                <div class="testimonial-card animate" th:each="testimonial : ${testimonials}">
+                    <img th:if="${testimonial.photoUrl != null and !testimonial.photoUrl.isEmpty()}"
+                         th:src="${testimonial.photoUrl}" th:alt="${testimonial.name}"
+                         class="testimonial-avatar" onerror="this.style.display='none'"/>
+                    <div class="testimonial-avatar-placeholder"
+                         th:if="${testimonial.photoUrl == null or testimonial.photoUrl.isEmpty()}"
+                         th:text="${#strings.substring(testimonial.name, 0, 1)}">A</div>
+                    <div class="testimonial-name" th:text="${testimonial.name}">Nombre</div>
+                    <div class="testimonial-social">
+                        <a th:if="${testimonial.instagramUrl != null and !testimonial.instagramUrl.isEmpty()}"
+                           th:href="${testimonial.instagramUrl}" target="_blank" title="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a th:if="${testimonial.facebookUrl != null and !testimonial.facebookUrl.isEmpty()}"
+                           th:href="${testimonial.facebookUrl}" target="_blank" title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

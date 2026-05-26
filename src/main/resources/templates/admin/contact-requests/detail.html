@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            .status-form { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+            .badge-pending    { background: rgba(255,193,7,0.15);  color: #856404; }
+            .badge-inprogress { background: rgba(13,110,253,0.12); color: #0a58ca; }
+            .badge-done       { background: rgba(25,135,84,0.12);  color: #146c43; }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-envelope-open-fill"></i> Detalle de Solicitud</h1>
+            <p>Información completa y seguimiento de la solicitud.</p>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 3rem;">
+        <div style="max-width: 680px; margin: 0 auto;">
+            <div class="card">
+                <div class="card-body" style="padding: 2.5rem;">
+
+                    <!-- Datos de la solicitud -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div>
+                            <div class="form-label">Nombre</div>
+                            <div style="font-size: 1rem; font-weight: 500;" th:text="${contactRequest.name}">Nombre</div>
+                        </div>
+                        <div>
+                            <div class="form-label">Correo</div>
+                            <div style="font-size: 1rem; font-weight: 500;" th:text="${contactRequest.email}">correo@email.com</div>
+                        </div>
+                        <div>
+                            <div class="form-label">Teléfono</div>
+                            <div style="font-size: 1rem; font-weight: 500;" th:text="${contactRequest.phone}">+593</div>
+                        </div>
+                        <div>
+                            <div class="form-label">Finalidad</div>
+                            <span class="badge"
+                                  th:text="${contactRequest.purpose.visualName}"
+                                  th:classappend="${contactRequest.purpose.name() == 'SERVICE'} ? 'badge-success' :
+                                                 (${contactRequest.purpose.name() == 'EDIFICA_PROGRAM'} ? 'badge-warning' : '')">
+                            </span>
+                        </div>
+                        <div>
+                            <div class="form-label">Fecha de recepción</div>
+                            <div style="font-size: 1rem;"
+                                 th:text="${#temporals.format(contactRequest.createdAt, 'dd MMMM yyyy, HH:mm')}">Fecha</div>
+                        </div>
+                        <div>
+                            <div class="form-label">Estado actual</div>
+                            <span class="badge"
+                                  th:text="${contactRequest.status.visualName}"
+                                  th:classappend="${contactRequest.status.name() == 'PENDING'}     ? 'badge-pending' :
+                                                 (${contactRequest.status.name() == 'IN_PROGRESS'} ? 'badge-inprogress' : 'badge-done')">
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Cambiar estado -->
+                    <div style="border-top: 1px solid var(--border); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="form-label" style="margin-bottom: 0.75rem;">
+                            <i class="bi bi-arrow-repeat"></i> Cambiar estado
+                        </div>
+                        <form th:action="@{/admin/contact-requests/{id}/status(id=${contactRequest.id})}"
+                              method="post" class="status-form">
+                            <input type="hidden" name="_method" value="PATCH"/>
+                            <select name="status" class="form-control" style="width: auto;">
+                                <option th:each="s : ${allStatuses}"
+                                        th:value="${s.name()}"
+                                        th:text="${s.visualName}"
+                                        th:selected="${s == contactRequest.status}">
+                                </option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-check-lg"></i> Actualizar
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div th:if="${param.updated}" style="background:rgba(25,135,84,0.12);border:1px solid rgba(25,135,84,0.3);color:#146c43;border-radius:var(--radius);padding:0.75rem 1rem;margin-bottom:1rem;"><i class="bi bi-check-circle"></i> Estado actualizado. Se ha enviado un correo al solicitante.</div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <a th:href="@{/admin/contact-requests}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                        <a th:href="@{/admin/contact-requests/delete/{id}(id=${contactRequest.id})}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

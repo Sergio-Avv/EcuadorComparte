@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            .social-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 2rem;
+                height: 2rem;
+                border-radius: 6px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+                text-decoration: none;
+                transition: background var(--transition), color var(--transition), border-color var(--transition);
+            }
+            .social-btn:hover {
+                background: var(--azul-claro);
+                color: #fff;
+                border-color: var(--azul-claro);
+            }
+            .filter-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.25rem 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .filter-grid {
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr;
+                gap: 0.75rem;
+                align-items: end;
+            }
+            @media (max-width: 700px) {
+                .filter-grid { grid-template-columns: 1fr; }
+            }
+            .filter-label {
+                font-size: 0.78rem;
+                font-weight: 600;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                margin-bottom: 0.3rem;
+            }
+            .filter-active-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
+                background: rgba(3,78,162,0.1);
+                color: var(--azul-oscuro);
+                border-radius: 20px;
+                font-size: 0.78rem;
+                font-weight: 600;
+                padding: 2px 10px;
+            }
+            .btn-excel {
+                background: #1d6f42;
+                color: #fff;
+                border: none;
+            }
+            .btn-excel:hover { background: #175a35; color: #fff; }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-chat-quote-fill"></i> Testimonios</h1>
+            <p>Gestiona los testimonios de éxito del portal.</p>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 3rem;">
+
+        <!-- Filtros -->
+        <div class="filter-card">
+            <form th:action="@{/admin/testimonials}" method="get">
+                <div class="filter-grid">
+                    <div>
+                        <div class="filter-label">Nombre</div>
+                        <input type="text" name="name" class="form-control"
+                               placeholder="Buscar por nombre..."
+                               th:value="${filterName}"/>
+                    </div>
+                    <div>
+                        <div class="filter-label">Desde</div>
+                        <input type="date" name="dateFrom" class="form-control"
+                               th:value="${filterDateFrom}"/>
+                    </div>
+                    <div>
+                        <div class="filter-label">Hasta</div>
+                        <input type="date" name="dateTo" class="form-control"
+                               th:value="${filterDateTo}"/>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem; align-items: center;">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                    <a th:href="@{/admin/testimonials}" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-x-lg"></i> Limpiar
+                    </a>
+                    <span th:if="${hasFilter}" class="filter-active-badge">
+                        <i class="bi bi-funnel-fill"></i> Filtro activo
+                    </span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Barra superior -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="font-size: 0.92rem; color: var(--text-secondary);">
+                <span th:text="${testimonials.size()}">0</span> testimonios encontrados
+            </div>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a th:href="@{/admin/testimonials/export/excel(
+                        name=${filterName},
+                        dateFrom=${filterDateFrom},
+                        dateTo=${filterDateTo})}"
+                   class="btn btn-excel btn-sm">
+                    <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+                </a>
+                <a th:href="@{/admin}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                <a th:href="@{/admin/testimonials/create}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> Nuevo testimonio
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${testimonials.isEmpty()}" style="text-align: center; padding: 4rem 0; color: var(--text-secondary);">
+            <i class="bi bi-chat-quote" style="font-size: 3rem; display: block; margin-bottom: 1rem; opacity: 0.40;"></i>
+            <h3 th:text="${hasFilter} ? 'Sin resultados para esos filtros.' : 'No hay testimonios aún.'">Sin resultados</h3>
+            <a th:if="${!hasFilter}" th:href="@{/admin/testimonials/create}" class="btn btn-primary" style="margin-top: 1rem;">
+                <i class="bi bi-plus-lg"></i> Crear primero
+            </a>
+        </div>
+
+        <div class="table-wrapper" th:if="${!testimonials.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Instagram</th>
+                    <th>Facebook</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="testimonial : ${testimonials}">
+                    <td th:text="${testimonial.id}">1</td>
+                    <td th:text="${testimonial.name}">Nombre</td>
+                    <td>
+                        <a th:if="${testimonial.instagramUrl != null and !testimonial.instagramUrl.isEmpty()}"
+                           th:href="${testimonial.instagramUrl}" target="_blank"
+                           class="social-btn">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <span th:if="${testimonial.instagramUrl == null or testimonial.instagramUrl.isEmpty()}"
+                              style="color: var(--text-secondary);">—</span>
+                    </td>
+                    <td>
+                        <a th:if="${testimonial.facebookUrl != null and !testimonial.facebookUrl.isEmpty()}"
+                           th:href="${testimonial.facebookUrl}" target="_blank"
+                           class="social-btn">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <span th:if="${testimonial.facebookUrl == null or testimonial.facebookUrl.isEmpty()}"
+                              style="color: var(--text-secondary);">—</span>
+                    </td>
+                    <td th:text="${#temporals.format(testimonial.createdAt, 'dd/MM/yyyy')}">Fecha</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a th:href="@{/admin/testimonials/edit/{id}(id=${testimonial.id})}" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a th:href="@{/admin/testimonials/delete/{id}(id=${testimonial.id})}" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

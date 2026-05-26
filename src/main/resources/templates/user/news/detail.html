@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content}, ~{::styles}, ~{::scripts})}">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            .news-detail-hero {
+                background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%);
+                padding: 4rem 0;
+                color: var(--blanco);
+            }
+
+            .news-detail-hero h1 {
+                font-family: var(--font-display);
+                font-size: 2.2rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                max-width: 750px;
+            }
+
+            .news-detail-meta {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+                opacity: 0.85;
+                font-size: 0.88rem;
+            }
+
+            .news-detail-section { padding: 4rem 0; }
+
+            .news-detail-grid {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 3rem;
+                align-items: start;
+            }
+
+            .news-detail-img {
+                width: 100%;
+                border-radius: var(--radius);
+                margin-bottom: 2rem;
+                max-height: 450px;
+                object-fit: cover;
+            }
+
+            .news-detail-content {
+                color: var(--text-secondary);
+                line-height: 1.9;
+                font-size: 1rem;
+            }
+
+            .news-detail-content p { margin-bottom: 1.25rem; }
+
+            .news-sidebar-card {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .news-sidebar-title {
+                font-family: var(--font-display);
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+                padding-bottom: 0.75rem;
+                border-bottom: 2px solid var(--amarillo);
+            }
+
+            @media (max-width: 768px) {
+                .news-detail-grid { grid-template-columns: 1fr; }
+                .news-detail-hero h1 { font-size: 1.6rem; }
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <div class="news-detail-hero">
+        <div class="container">
+            <h1 th:text="${news.title}">Título de la noticia</h1>
+            <div class="news-detail-meta">
+                <span><i class="bi bi-person"></i> <span th:text="${news.author}">Autor</span></span>
+                <span><i class="bi bi-calendar3"></i> <span th:text="${#temporals.format(news.publishedAt, 'dd MMMM yyyy')}">Fecha</span></span>
+                <span class="badge badge-success">Publicado</span>
+            </div>
+        </div>
+    </div>
+
+    <section class="news-detail-section">
+        <div class="container">
+            <div class="news-detail-grid">
+                <div class="animate">
+                    <img th:if="${news.imageUrl != null and !news.imageUrl.isEmpty()}"
+                         th:src="${news.imageUrl}" th:alt="${news.title}"
+                         class="news-detail-img"/>
+                    <div class="news-detail-content" th:text="${news.content}">
+                        Contenido de la noticia.
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <a th:href="@{/noticias}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver a noticias
+                        </a>
+                    </div>
+                </div>
+                <div class="animate-right">
+                    <div class="news-sidebar-card">
+                        <div class="news-sidebar-title">Sobre esta noticia</div>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7;"
+                           th:text="${news.summary}">Resumen</p>
+                    </div>
+                    <div class="news-sidebar-card">
+                        <div class="news-sidebar-title">¿Te interesa?</div>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                            Contáctanos para más información sobre nuestros programas.
+                        </p>
+                        <a th:href="@{/contacto}" class="btn btn-primary btn-sm"
+                           style="width: 100%; justify-content: center;">
+                            <i class="bi bi-send"></i> Contáctanos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</th:block>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>
