@@ -11,7 +11,7 @@ https://github.com/Sergio-Avv/EcuadorComparte
 
 ## Descripción del Proyecto
 
-**EcuadorComparte** es una aplicación web desarrollada con Spring Boot que actúa como plataforma informativa y de contacto para la organización Alianza Ecuador. El sistema permite publicar noticias, recoger testimonios de la comunidad, gestionar solicitudes de contacto ciudadanas y generar reportes automáticos semanales por correo electrónico.
+**EcuadorComparte** es una aplicación web desarrollada con Spring Boot que actúa como plataforma informativa y de contacto para la organización Latinoamerica Comparte. El sistema permite publicar noticias, recoger testimonios de la comunidad, gestionar solicitudes de contacto ciudadanas y generar reportes automáticos semanales por correo electrónico.
  
 ### Funcionalidades principales
 
