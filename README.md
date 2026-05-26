@@ -1,6 +1,6 @@
 # EcuadorComparte
 
-Plataforma web informativa y de contacto para la organización Alianza Ecuador.
+Plataforma web informativa y de contacto para la organización Ecuador Conparte.
 
 ---
 
