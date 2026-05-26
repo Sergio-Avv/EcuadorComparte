@@ -6,8 +6,7 @@ Plataforma web informativa y de contacto para la organización Alianza Ecuador.
 
 ## URL del Repositorio GitHub
 
-https://github.com/Sierbot1/ecuador-comparte.git
-
+https://github.com/Sergio-Avv/EcuadorComparte
 ---
 
 ## Descripción del Proyecto
